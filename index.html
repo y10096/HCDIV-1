@@ -1,47 +1,69 @@
 <!doctype html>
 <html>
 <head>
-<title>Assignment 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YSY's Assignment 1</title>
 <style>
-
-  /* CSS goes here 
-  
-    E.g. table {
-    }
-  
-  */
-
+  body {
+            font-family: Calibri, sans-serif;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
 </style>
 </head>
 <body>
-
-<h2>Singapore 2-hr weather forecast</h2>
-<h4 id="timestring"></h4>
-<table id="weatherTable">
-    <tr>
+  <h1>Singapore 2-hr weather forecast</h1>
+  <table id="weatherTable">
+    <thead>
+      <tr>
         <th>Area</th>
         <th>Forecast</th>
-    </tr>
-</table>
-
+      </tr>
+    </thead>
+    <tbody id="weatherData>
+    </tbody>  
+  </table>
+      
 <script>
-fetch('https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast')
-  .then(response => response.json())
-  .then(responsedata => {
+      const apiUrl = 'https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast';
+      async function getWeatherData() {
+          try {
+              const response = await fetch(apiUrl);
+              const data = await response.json();
+              const areas = data.items[0].area_metadata;
+              const forecasts = data.items[0].forecast;
 
-    /* JS code goes here.
-    
-    */
-  
-    let timestamp = responsedata.data.items[0].update_timestamp;
-    let forecasts = responsedata.data.items[0].forecasts;
-    
-    console.log(timestamp);
-    console.log(forecasts);
-  
-  });
+              const tableBody = document.querySelector('#weatherData');
+              for (let i = 0; i < areas.length; i++) {
+                  const row = document.createElement('tr');
+                    
+                  const areaCell = document.createElement('td');
+                  areaCell.textContent = areas[i].name;
+                  row.appendChild(areaCell);
+                    
+                  const forecastCell = document.createElement('td');
+                  forecastCell.textContent = forecasts[i].forecast;
+                  row.appendChild(forecastCell);
+                    
+                  tableBody.appendChild(row);
+              }
+          } catch (error) {
+              console.error('Failed to fetch weather data:', error);
+          }
+      }
 
-
-</script>
+      getWeatherData();
+  </script>
 </body>
 </html>
