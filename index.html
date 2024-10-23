@@ -37,7 +37,8 @@
       
   <script>
     // Updated API URL with alternative CORS proxy
-    const apiUrl = 'https://api.allorigins.win/get?url=https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast';
+    const apiUrl = 'https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast';
+
 
     async function getWeatherData() {
         try {
@@ -47,9 +48,8 @@
             console.log('API Response:', data);  // Debugging line
             
             // Parse the data inside the "contents" field of the response
-            const parsedData = JSON.parse(data.contents);
-            const areas = parsedData.items[0].area_metadata;
-            const forecasts = parsedData.items[0].forecast;
+            const areas = data.items[0].area_metadata;
+            const forecasts = data.items[0].forecasts;
 
             const tableBody = document.querySelector('#weatherData');
             for (let i = 0; i < areas.length; i++) {
