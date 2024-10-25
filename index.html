@@ -36,39 +36,29 @@
   </table>
       
   <script>
-    const apiUrl = 'https://api.allorigins.win/get?url=https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast';
+fetch('https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast')
+  .then(response => response.json())
+  .then(responsedata => {
 
-    async function getWeatherData() {
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            
-            console.log('API Response:', data);  // Debugging line
-            
-            const parsedData = JSON.parse(data.contents);
-            const areas = parsedData.items[0].area_metadata;
-            const forecasts = parsedData.items[0].forecasts;
+    let forecasts = responsedata.data.items[0].forecasts;
 
-            const tableBody = document.querySelector('#weatherData');
-            for (let i = 0; i < areas.length; i++) {
-                const row = document.createElement('tr');
+    const weatherData = document.getElementById('weatherData');
 
-                const areaCell = document.createElement('td');
-                areaCell.textContent = areas[i].name;
-                row.appendChild(areaCell);
+    forecasts.forEach(forecast => {
+      const row = document.createElement('tr'); 
+      const areaCell = document.createElement('td'); 
+      const forecastCell = document.createElement('td'); 
+      
+      areaCell.textContent = forecast.area;
+      forecastCell.textContent = forecast.forecast;
+      
+      row.appendChild(areaCell);
+      row.appendChild(forecastCell); 
+      weatherData.appendChild(row); 
+    });
+  })
+  .catch(error => console.error('Error fetching the weather data:', error));
 
-                const forecastCell = document.createElement('td');
-                forecastCell.textContent = forecasts[i].forecast;
-                row.appendChild(forecastCell);
-
-                tableBody.appendChild(row);
-            }
-        } catch (error) {
-            console.error('Failed to fetch weather data:', error);
-        }
-    }
-
-    getWeatherData();
-  </script>
+</script>
 </body>
 </html>
